@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SafeBrowsing</string>
+    <string name="facebook_app_id">258517154572405</string>
+    <string name="fb_login_protocol_scheme">fb258517154572405</string>
+</resources>
