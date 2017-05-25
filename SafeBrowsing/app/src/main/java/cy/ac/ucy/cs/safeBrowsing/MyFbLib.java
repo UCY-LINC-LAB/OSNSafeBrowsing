@@ -14,35 +14,45 @@ import org.json.JSONObject;
 
 import java.security.spec.ECField;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class MyFbLib {
+public class MyFbLib  {
 
+    private static AtomicBoolean flag = new AtomicBoolean(false);
     private static final String TAG = MyFbLib.class.getSimpleName();
     private static AccessToken at= null;
     private static ArrayList<MyPost> givenPosts = new ArrayList<MyPost> ();
     private static ArrayList<MyPost> queuePost=new ArrayList<MyPost>();
-
+    private static int counter=0;
+//    private static boolean flag=false;
+    static Thread t;
     public static AccessToken getAt() {
         return at;
     }
+    public static ArrayList<MyPost> getGivenPosts(){
+        return queuePost;
+    }
 
-    public static void setAt(AccessToken accessT) {
+    public  static void setAt(AccessToken accessT) {
         at = accessT;
     }
 
-    public static void fillPostQueue(){
+    public  static void fillPostQueue(){
         int i=0;
         String userId=at.getUserId();
-        GraphRequest requestPages=GraphRequest.newGraphPathRequest(at, "/" + userId + "/likes",
+        final GraphRequest requestPages=GraphRequest.newGraphPathRequest(at, "/" + userId + "/likes",
                 new GraphRequest.Callback() {
                     @Override
                     public void onCompleted(GraphResponse response) {
                         try {
+                            Log.d(TAG,"1st request");
                             JSONObject json=response.getJSONObject();
                             JSONArray jarray=json.getJSONArray("data");
-                            for(int i=0; i<jarray.length(); i++){
-                                final JSONObject page=jarray.getJSONObject(i);
+                           // JSONObject paging=response.getJSONObject();
 
+                            for(int i=0; i<jarray.length() || counter>=2; i++){
+                                final JSONObject page=jarray.getJSONObject(i);
                                 GraphRequest request = GraphRequest.newGraphPathRequest(
                                         at,
                                         "/"+page.getString("id")+"/posts",      //get posts of the page using page id
@@ -50,11 +60,13 @@ public class MyFbLib {
                                             @Override
                                             public void onCompleted(GraphResponse response) {
                                                 String postID=null;
+                                                Log.d(TAG,"2nd request");
                                                 try {
                                                     JSONObject json=response.getJSONObject();
                                                     JSONArray jarray=json.getJSONArray("data");
                                                     JSONObject pagePost=jarray.getJSONObject(0);
                                                     postID=pagePost.getString("id");
+                                                    Log.d(TAG,"thisLalalaala:"+postID);
 
                                                 }catch (Exception e){
                                                     e.printStackTrace();
@@ -67,6 +79,7 @@ public class MyFbLib {
                                                             public void onCompleted(GraphResponse response) {
                                                                 JSONObject json=response.getJSONObject();
                                                                 String postType=null;
+                                                                Log.d(TAG,"3rd request");
                                                                 try {
                                                                     postType= json.getString("type");
                                                                 }catch (Exception e){
@@ -81,17 +94,29 @@ public class MyFbLib {
 
                                                                     //Lipoun ta likes,comments,shares
                                                                     try {
+
+                                                                        postID=json.getString("id");
                                                                         message= json.getString("message");
                                                                         pageName=page.getString("name");
-                                                                        JSONObject pic=page.getJSONObject("data");
-                                                                        pagePicture=pic.getString("url");
                                                                         created_time=json.getString("created_time");
+                                                                        JSONObject pic=page.getJSONObject("picture");
+                                                                        JSONObject data=pic.getJSONObject("data");
+                                                                        pagePicture=data.getString("url");
+
+
                                                                     }catch (Exception e){
                                                                         e.printStackTrace();
                                                                     }
 
                                                                     MyPost status=new MyPost(postID,pageName,pagePicture,created_time,message);
-                                                                    queuePost.add(status);
+                                                                    //if(checkDuplicates(status)){
+
+                                                                        queuePost.add(status);
+                                                                    Log.d(TAG,"insert post"+queuePost.size());
+                                                                        counter++;
+                                                                   // }
+                                                                    Log.d(TAG,status.toString());
+
 
                                                                 }
                                                                 if(postType.compareTo("link")==0){
@@ -118,7 +143,11 @@ public class MyFbLib {
                                                                     }
 
                                                                     MyPost link=new MyLinkPost(postID,pageName,pagePicture,created_time,message,urlImg,urlLink);
-                                                                    queuePost.add(link);
+                                                                    if(!checkDuplicates(link)){
+                                                                        queuePost.add(link);
+                                                                        counter++;
+                                                                    }
+
 
                                                                 }
                                                                 if(postType.compareTo("video")==0){
@@ -144,8 +173,12 @@ public class MyFbLib {
                                                                         e.printStackTrace();
                                                                     }
 
-                                                                    MyPost link=new MyVideoPost(postID,pageName,pagePicture,created_time,message,urlImg,urlLink);
-                                                                    queuePost.add(link);
+                                                                    MyPost video=new MyVideoPost(postID,pageName,pagePicture,created_time,message,urlImg,urlLink);
+                                                                    if(!checkDuplicates(video)){
+                                                                        queuePost.add(video);
+                                                                        counter++;
+
+                                                                    }
 
                                                                 }
                                                                 if(postType.compareTo("photo")==0){
@@ -169,26 +202,29 @@ public class MyFbLib {
                                                                         e.printStackTrace();
                                                                     }
 
-                                                                    MyPost link=new MyPhotoPost(postID,pageName,pagePicture,created_time,message,pictureLink);
-                                                                    queuePost.add(link);
+                                                                    MyPost photo=new MyPhotoPost(postID,pageName,pagePicture,created_time,message,pictureLink);
+                                                                    if(!checkDuplicates(photo)) {
+                                                                        queuePost.add(photo);
+                                                                        counter++;
+                                                                    }
 
                                                                 }
-
+                                                                flag.set(true);
 
                                                             }
                                                         });
 
                                                 Bundle parameters = new Bundle();
-                                                parameters.putString("fields", "type,full_picture,message,link,likes");
+                                                parameters.putString("fields", "type,full_picture,message,link,likes,created_time");
                                                 request.setParameters(parameters);
-                                                request.executeAndWait();
+                                                request.executeAsync();
 
                                             }
                                         });
                                 Bundle parameters = new Bundle();
                                 parameters.putString("fields", "picture,name");
                                 request.setParameters(parameters);
-                                request.executeAndWait();
+                                request.executeAsync();
                             }
 
                         }catch (Exception e){
@@ -196,11 +232,50 @@ public class MyFbLib {
                         }
                     }
                 });
-
-        requestPages.executeAndWait();
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "picture,name");
+        requestPages.setParameters(parameters);
+        requestPages.executeAsync();
 
 
         //----------------------------------------------------------------------------------------
+
+
+    }
+
+    private static Boolean checkDuplicates(MyPost post){
+        for(int i=0; i< givenPosts.size(); i++){
+            if (post.equals(givenPosts.get(i))){
+                return true;
+            }
+        }
+        return false;
+    }
+
+//    public static boolean
+
+    public  static ArrayList<MyPost> getTenNextPosts () {
+        ArrayList<MyPost> posts=new ArrayList<MyPost>();
+        counter=0;
+//        flag=false;
+        fillPostQueue();
+
+        for (int i = 0; i < queuePost.size(); i++) {
+            MyPost tmp = new MyPost(queuePost.get(i));
+            if (!checkDuplicates(tmp)) {
+                queuePost.remove(i);
+                givenPosts.add(tmp);
+                Log.d(TAG, tmp.toString());
+                queuePost.add(tmp);
+            }
+        }
+
+        return posts;
+    }
+
+    public static MyProfile getMyProfile () {
+        int i=0;
+        String userId=at.getUserId();
         GraphRequest request = GraphRequest.newGraphPathRequest(
                 at,
                 "/"+userId+"/posts",
@@ -208,7 +283,7 @@ public class MyFbLib {
                     @Override
                     public void onCompleted(GraphResponse response) {
                         String message=null;
-                        String createdTime=null;
+                            String createdTime=null;
                         String postId=null;
                         try {
                             JSONObject json = response.getJSONObject();
@@ -228,29 +303,12 @@ public class MyFbLib {
                     }
                 });
 
-        /*  Bundle parameters = new Bundle();
+            Bundle parameters = new Bundle();
             parameters.putString("fields", "name");
             request.setParameters(parameters);
-           */
+
         request.executeAsync();
         i++;
-
-    }
-
-    public static ArrayList<MyPost> getTenNextPosts () {
-        ArrayList<MyPost> posts=new ArrayList<MyPost>();
-        fillPostQueue();
-        for(int i=0; i<queuePost.size(); i++){
-            MyPost tmp=new MyPost(queuePost.get(i));
-            queuePost.remove(i);
-            givenPosts.add(tmp);
-            queuePost.add(tmp);
-        }
-
-        return posts;
-    }
-
-    public static MyProfile getMyProfile () {
         return null;
     }
 

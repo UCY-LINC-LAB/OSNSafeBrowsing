@@ -95,8 +95,33 @@ public class MyPost {
         this.message = message;
     }
 
+    @Override
+    public String toString() {
+        return "MyPost{" +
+                "id='" + id + '\'' +
+                ", authorName='" + authorName + '\'' +
+                ", authorImg='" + authorImg + '\'' +
+                ", createdTime='" + createdTime + '\'' +
+                ", message='" + message + '\'' +
+                ", likesCounter='" + likesCounter + '\'' +
+                ", commentsCounter='" + commentsCounter + '\'' +
+                ", shareCounters='" + shareCounters + '\'' +
+                '}';
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        MyPost myPost = (MyPost) o;
 
+        return id.equals(myPost.id);
 
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

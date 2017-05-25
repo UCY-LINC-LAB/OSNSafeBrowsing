@@ -54,13 +54,28 @@ public class MainActivity extends Activity {
                 // ---------------
                 setContentView(R.layout.sample_wall);
                 MyFbLib.setAt(AT);
-                MyFbLib.getTenNextPosts();
-                list= (LinearLayout) findViewById(R.id.list);
+                ArrayList<MyPost> posts=MyFbLib.getTenNextPosts();
+                Log.d(TAG,"Second Call-------------------------");
+              //  MyFbLib.getTenNextPosts();
+
+              /*  while(MyFbLib.getGivenPosts().isEmpty()){
+                    //do nothing
+                }*/
+
+                while(MyFbLib.getGivenPosts().isEmpty()){
+                    Log.d(TAG,"empty");
+                    try {
+                        Thread.currentThread().sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Log.d(TAG,"not empty");
+                list = (LinearLayout) findViewById(R.id.list);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 Button button2 = new Button(MainActivity.this);
-                TextView txt2= new TextView(MainActivity.this);
+                TextView txt2 = new TextView(MainActivity.this);
                 LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
-
                 list.addView(button2, params2);
                 list.addView(txt2, params2);
                 txt2.setText("ALALALAAL\n\n ALALAA");
