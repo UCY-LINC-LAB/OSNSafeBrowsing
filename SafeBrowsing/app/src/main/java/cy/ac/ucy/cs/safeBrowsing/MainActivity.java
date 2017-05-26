@@ -56,21 +56,6 @@ public class MainActivity extends Activity {
                 MyFbLib.setAt(AT);
                 ArrayList<MyPost> posts=MyFbLib.getTenNextPosts();
                 Log.d(TAG,"Second Call-------------------------");
-              //  MyFbLib.getTenNextPosts();
-
-              /*  while(MyFbLib.getGivenPosts().isEmpty()){
-                    //do nothing
-                }*/
-
-                while(MyFbLib.getGivenPosts().isEmpty()){
-                    Log.d(TAG,"empty");
-                    try {
-                        Thread.currentThread().sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                Log.d(TAG,"not empty");
                 list = (LinearLayout) findViewById(R.id.list);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 Button button2 = new Button(MainActivity.this);
