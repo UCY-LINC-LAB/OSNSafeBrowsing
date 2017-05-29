@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -28,6 +29,8 @@ public class MainActivity extends Activity {
     CallbackManager callbackManager;
     LoginResult LR;
     AccessToken AT;
+
+    int backButtonCount= 0;
 
     // ---------------
     LinearLayout list;
@@ -84,6 +87,28 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /**
+     * Back button listener.
+     * Will close the application if the back button pressed twice.
+     */
+    @Override
+    public void onBackPressed() {
+
+
+        if(backButtonCount >= 1) {/*
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);*/
+            //android.os.Process.killProcess(android.os.Process.myPid());
+            finish ();
+        }
+        else {
+            Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
+            backButtonCount++;
+        }
     }
 
 }
