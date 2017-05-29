@@ -16,4 +16,11 @@ public class MyPhotoPost extends MyPost {
     public void setPictureLink(String pictureLink) {
         this.pictureLink = pictureLink;
     }
+
+    @Override
+    public String toString() {
+        return super.toString()+" MyPhotoPost{" +
+                "pictureLink='" + pictureLink + '\'' +
+                '}';
+    }
 }

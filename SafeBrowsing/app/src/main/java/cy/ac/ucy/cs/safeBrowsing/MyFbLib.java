@@ -2,6 +2,7 @@ package cy.ac.ucy.cs.safeBrowsing;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -50,7 +51,7 @@ public class MyFbLib  {
                                     JSONArray jarray=json.getJSONArray("data");
                                     // JSONObject paging=response.getJSONObject();
 
-                                    for(int i=0; i<jarray.length() || counter>=2; i++){
+                                    for(int i=0; i<jarray.length() || counter<10; i++){
                                         final JSONObject page=jarray.getJSONObject(i);
                                         GraphRequest request = GraphRequest.newGraphPathRequest(
                                                 at,
@@ -107,12 +108,11 @@ public class MyFbLib  {
                                                                             }
 
                                                                             MyPost status=new MyPost(postID,pageName,pagePicture,created_time,message);
-                                                                            //if(checkDuplicates(status)){
-
-                                                                            queuePost.add(status);
-                                                                            Log.d(TAG,"insert post"+queuePost.size());
-                                                                            counter++;
-                                                                            // }
+                                                                            if(!checkDuplicates(status)){
+                                                                                queuePost.add(status);
+                                                                                Log.d(TAG,"insert post"+queuePost.size());
+                                                                                counter++;
+                                                                            }
                                                                             Log.d(TAG,status.toString());
 
 
@@ -130,9 +130,11 @@ public class MyFbLib  {
                                                                                 if(json.has("message")) {
                                                                                     message = json.getString("message");
                                                                                 }
+                                                                                postID=json.getString("id");
                                                                                 pageName=page.getString("name");
-                                                                                JSONObject pic=page.getJSONObject("data");
-                                                                                pagePicture=pic.getString("url");
+                                                                                JSONObject pic=page.getJSONObject("picture");
+                                                                                JSONObject data=pic.getJSONObject("data");
+                                                                                pagePicture=data.getString("url");
                                                                                 created_time=json.getString("created_time");
                                                                                 urlLink=json.getString("link");
                                                                                 urlImg=json.getString("full_picture");
@@ -145,6 +147,7 @@ public class MyFbLib  {
                                                                                 queuePost.add(link);
                                                                                 counter++;
                                                                             }
+                                                                            Log.d(TAG,link.toString());
 
 
                                                                         }
@@ -161,9 +164,11 @@ public class MyFbLib  {
                                                                                 if(json.has("message")) {
                                                                                     message = json.getString("message");
                                                                                 }
+                                                                                postID=json.getString("id");
                                                                                 pageName=page.getString("name");
-                                                                                JSONObject pic=page.getJSONObject("data");
-                                                                                pagePicture=pic.getString("url");
+                                                                                JSONObject pic=page.getJSONObject("picture");
+                                                                                JSONObject data=pic.getJSONObject("data");
+                                                                                pagePicture=data.getString("url");
                                                                                 created_time=json.getString("created_time");
                                                                                 urlLink=json.getString("link");
                                                                                 urlImg=json.getString("full_picture");
@@ -175,8 +180,8 @@ public class MyFbLib  {
                                                                             if(!checkDuplicates(video)){
                                                                                 queuePost.add(video);
                                                                                 counter++;
-
                                                                             }
+                                                                            Log.d(TAG,video.toString());
 
                                                                         }
                                                                         if(postType.compareTo("photo")==0){
@@ -191,9 +196,11 @@ public class MyFbLib  {
                                                                                 if(json.has("message")) {
                                                                                     message = json.getString("message");
                                                                                 }
+                                                                                postID=json.getString("id");
                                                                                 pageName=page.getString("name");
-                                                                                JSONObject pic=page.getJSONObject("data");
-                                                                                pagePicture=pic.getString("url");
+                                                                                JSONObject pic=page.getJSONObject("picture");
+                                                                                JSONObject data=pic.getJSONObject("data");
+                                                                                pagePicture=data.getString("url");
                                                                                 created_time=json.getString("created_time");
                                                                                 pictureLink=json.getString("full_picture");
                                                                             }catch (Exception e){
@@ -205,9 +212,9 @@ public class MyFbLib  {
                                                                                 queuePost.add(photo);
                                                                                 counter++;
                                                                             }
+                                                                            Log.d(TAG,photo.toString());
 
                                                                         }
-                                                                        flag.set(true);
 
                                                                     }
                                                                 });
@@ -249,6 +256,8 @@ public class MyFbLib  {
 
     }
 
+
+    @NonNull
     private static Boolean checkDuplicates(MyPost post){
         for(int i=0; i< givenPosts.size(); i++){
             if (post.equals(givenPosts.get(i))){
@@ -265,14 +274,13 @@ public class MyFbLib  {
         counter=0;
 
         fillPostQueue();
-
+        MyProfile userProfile=getMyProfile();
         for (int i = 0; i < queuePost.size(); i++) {
             MyPost tmp = new MyPost(queuePost.get(i));
             if (!checkDuplicates(tmp)) {
                 queuePost.remove(i);
                 givenPosts.add(tmp);
                 posts.add(tmp);
-                Log.d(TAG, tmp.toString());
                 queuePost.add(tmp);
             }
         }
@@ -281,42 +289,73 @@ public class MyFbLib  {
     }
 
     public static MyProfile getMyProfile () {
-        int i=0;
-        String userId=at.getUserId();
-        GraphRequest request = GraphRequest.newGraphPathRequest(
-                at,
-                "/"+userId+"/posts",
-                new GraphRequest.Callback() {
-                    @Override
-                    public void onCompleted(GraphResponse response) {
-                        String message=null;
-                            String createdTime=null;
-                        String postId=null;
-                        try {
-                            JSONObject json = response.getJSONObject();
-                            JSONArray jarray = json.getJSONArray("data");
-                            for(int i=0; i<jarray.length(); i++) {
-                                JSONObject post = jarray.getJSONObject(i);
-                                message = post.getString("message");
-                                createdTime=post.getString("created_time");
-                                postId=post.getString("id");
-                                Log.d(TAG,message);
-                                Log.d(TAG,createdTime);
-                                Log.d(TAG,postId);
+        final MyProfile[] userProfileOrg = new MyProfile[1];
+        Thread t= new Thread() {
+            @Override
+            public void run() {
+                GraphRequest request = GraphRequest.newMeRequest(
+                        at,
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                String id = null;
+                                String profilePicLink = null;
+                                String about = null;
+                                String birthday = null;
+                                String email = null;
+                                String gender = null;
+                                String homeTown = null;
+                                String timelineLink = null;
+
+                                try{
+                                    JSONObject profile= response.getJSONObject();
+                                    if(profile.has("birthday")){
+                                        birthday=profile.getString("birthday");
+                                    }
+                                    if(profile.has("email")){
+                                        email=profile.getString("email");
+                                    }
+                                    JSONObject picture=profile.getJSONObject("pictre");
+                                    JSONObject picData=picture.getJSONObject("data");
+                                    profilePicLink=picData.getString("url");
+                                    if(profile.has("about")){
+                                        about=profile.getString("about");
+                                    }
+                                    if(profile.has("gender")){
+                                        gender=profile.getString("gender");
+                                    }
+                                    if(profile.has("hometown")){
+                                        JSONObject town=profile.getJSONObject("hometown");
+                                        homeTown=town.getString("name");
+                                    }
+                                    timelineLink=profile.getString("link");
+                                    id=profile.getString("id");
+
+
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                                MyProfile userProfile=new MyProfile(id,profilePicLink,about,birthday,email,gender,homeTown,timelineLink);
+                                Log.d(TAG,userProfile.toString());
+                                userProfileOrg[0] =userProfile;
                             }
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                });
+                        });
 
-            Bundle parameters = new Bundle();
-            parameters.putString("fields", "name");
-            request.setParameters(parameters);
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "birthday,email,picture,about,gender,hometown,link");
+                request.setParameters(parameters);
+                request.executeAndWait();
 
-        request.executeAsync();
-        i++;
-        return null;
+            }
+
+        };
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return userProfileOrg[0];
     }
 
 }

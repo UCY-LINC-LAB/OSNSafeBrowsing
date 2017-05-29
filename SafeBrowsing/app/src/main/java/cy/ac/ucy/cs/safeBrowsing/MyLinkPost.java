@@ -26,4 +26,13 @@ public class MyLinkPost extends MyPost {
     public void setURLImg(String URLImg) {
         this.URLImg = URLImg;
     }
+
+    @Override
+    public String toString() {
+
+        return super.toString()+"MyLinkPost{" +
+                "URLLink='" + URLLink + '\'' +
+                ", URLImg='" + URLImg + '\'' +
+                '}';
+    }
 }

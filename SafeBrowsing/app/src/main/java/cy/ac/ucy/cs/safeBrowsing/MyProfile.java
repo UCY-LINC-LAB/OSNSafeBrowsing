@@ -6,11 +6,22 @@ public class MyProfile {
     private String id = null;
     private String profilePicLink = null;
     private String about = null;
-    private String birthdate = null;
+    private String birthday = null;
     private String email = null;
     private String gender = null;
     private String homeTown = null;
     private String timelineLink = null;
+
+    public MyProfile(String id, String profilePicLink, String about, String birthday, String email, String gender, String homeTown, String timelineLink) {
+        this.id = id;
+        this.profilePicLink = profilePicLink;
+        this.about = about;
+        this.birthday = birthday;
+        this.email = email;
+        this.gender = gender;
+        this.homeTown = homeTown;
+        this.timelineLink = timelineLink;
+    }
 
     public String getId() {
         return id;
@@ -37,11 +48,11 @@ public class MyProfile {
     }
 
     public String getBirthdate() {
-        return birthdate;
+        return birthday;
     }
 
     public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
+        this.birthday = birthdate;
     }
 
     public String getEmail() {
@@ -74,5 +85,19 @@ public class MyProfile {
 
     public void setTimelineLink(String timelineLink) {
         this.timelineLink = timelineLink;
+    }
+
+    @Override
+    public String toString() {
+        return "MyProfile{" +
+                "id='" + id + '\'' +
+                ", profilePicLink='" + profilePicLink + '\'' +
+                ", about='" + about + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", email='" + email + '\'' +
+                ", gender='" + gender + '\'' +
+                ", homeTown='" + homeTown + '\'' +
+                ", timelineLink='" + timelineLink + '\'' +
+                '}';
     }
 }

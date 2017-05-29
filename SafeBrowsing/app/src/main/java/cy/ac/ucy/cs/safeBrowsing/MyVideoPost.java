@@ -5,7 +5,7 @@ public class MyVideoPost extends MyPost {
     private String videoLink= null;
     private String videoImg= null;
 
-    MyVideoPost(String postId,String pageName,String pagePicture,String createdTime,String message,String videoImg,String videoLink){
+    MyVideoPost(String postId, String pageName, String pagePicture, String createdTime, String message, String videoImg, String videoLink){
         super(postId,pageName,pagePicture,createdTime,message);
         this.videoImg=videoImg;
         this.videoLink=videoLink;
@@ -27,6 +27,14 @@ public class MyVideoPost extends MyPost {
         this.videoImg = videoImg;
     }
 
+
+    @Override
+    public String toString() {
+        return super.toString()+"MyVideoPost{" +
+                "videoLink='" + videoLink + '\'' +
+                ", videoImg='" + videoImg + '\'' +
+                '}';
+    }
 
 
 }
