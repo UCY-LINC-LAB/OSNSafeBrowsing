@@ -15,12 +15,13 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends Activity {
 
@@ -42,7 +43,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext()); //Calls for the facebook feature
         callbackManager = CallbackManager.Factory.create();
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.boot_screen_form);
+
+        setContentView(R.layout.log_in_form);
         login = (LoginButton) findViewById(R.id.login_button);
         //login.setReadPermissions("user_friends", "email");
 
@@ -53,22 +56,9 @@ public class MainActivity extends Activity {
                 // App code
                 LR= loginResult;
                 AT= LR.getAccessToken();
-
-                // ---------------
-                setContentView(R.layout.sample_wall);
                 MyFbLib.setAt(AT);
-                ArrayList<MyPost> posts=MyFbLib.getTenNextPosts();
-                Log.d(TAG,"Second Call-------------------------");
-                list = (LinearLayout) findViewById(R.id.list);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                Button button2 = new Button(MainActivity.this);
-                TextView txt2 = new TextView(MainActivity.this);
-                LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
-                list.addView(button2, params2);
-                list.addView(txt2, params2);
-                txt2.setText("ALALALAAL\n\n ALALAA");
 
-                // ---------------
+                enterWall ();
         }
 
             @Override
@@ -82,6 +72,28 @@ public class MainActivity extends Activity {
             }
         });
 
+        // Catch Log out Event
+        AccessTokenTracker accessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(
+                    AccessToken oldAccessToken,
+                    AccessToken currentAccessToken) {
+
+                if (currentAccessToken == null){
+                    AT= null;
+                    setContentView(R.layout.log_in_form);
+                }
+            }
+        };
+
+
+        setContentView(R.layout.boot_screen_form);
+
+        if (isLoggedIn()== true) {
+            enterWall ();
+        } else {
+            setContentView(R.layout.log_in_form);
+        }
     }
 
     @Override
@@ -109,6 +121,30 @@ public class MainActivity extends Activity {
             Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
             backButtonCount++;
         }
+    }
+
+    public boolean isLoggedIn() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        /*try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+        }*/
+        MyFbLib.setAt(accessToken);
+        return accessToken != null;
+    }
+
+    public void enterWall () {
+        setContentView(R.layout.wall_form);
+
+        ArrayList<MyPost> posts=MyFbLib.getTenNextPosts();
+        list = (LinearLayout) findViewById(R.id.list);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        Button button2 = new Button(MainActivity.this);
+        TextView txt2 = new TextView(MainActivity.this);
+        LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
+        list.addView(button2, params2);
+        list.addView(txt2, params2);
+        txt2.setText("ALALALAAL\n\n ALALAA");
     }
 
 }
