@@ -5,95 +5,122 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/loginButton"
-        android:layout_width="132dp"
-        android:layout_height="25dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="469dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        app2:layout_constraintBottom_toBottomOf="parent"
-        app2:layout_constraintLeft_toLeftOf="parent"
-        app2:layout_constraintRight_toRightOf="parent"
-        app2:layout_constraintVertical_bias="1.0"
-        app2:layout_constraintHorizontal_bias="0.704"
-        app2:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteY="17dp"
-        tools:layout_editor_absoluteX="171dp" />
-
-    <Button
-        android:id="@+id/btnLoadMore"
-        android:layout_width="358dp"
-        android:layout_height="48dp"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="94dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Load More"
-        app2:layout_constraintBottom_toTopOf="@+id/scrollView2"
-        app2:layout_constraintLeft_toLeftOf="parent"
-        app2:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
-
-    <ImageButton
-        android:id="@+id/imgProfPic"
-        android:layout_width="36dp"
-        android:layout_height="41dp"
-        app2:srcCompat="@drawable/com_facebook_profile_picture_blank_square"
-        app2:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="16dp"
-        app2:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
         app2:layout_constraintBottom_toTopOf="@+id/btnLoadMore"
-        app2:layout_constraintVertical_bias="0.0"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="8dp" />
-
-    <ImageButton
-        android:id="@+id/imgSettings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
-        app2:layout_constraintRight_toRightOf="parent"
-        app2:srcCompat="@android:drawable/ic_menu_preferences"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        tools:layout_editor_absoluteY="4dp"
-        app2:layout_constraintLeft_toRightOf="@+id/txtName"
-        android:layout_marginLeft="8dp"
-        app2:layout_constraintHorizontal_bias="1.0" />
-
-    <ScrollView
-        android:id="@+id/scrollView2"
-        android:layout_width="0dp"
-        android:layout_height="399dp"
-        android:layout_marginTop="8dp"
-        app2:layout_constraintBottom_toBottomOf="parent"
-        app2:layout_constraintHorizontal_bias="0.0"
+        app2:layout_constraintHorizontal_bias="1.0"
         app2:layout_constraintLeft_toLeftOf="parent"
         app2:layout_constraintRight_toRightOf="parent"
         app2:layout_constraintTop_toTopOf="parent"
-        app2:layout_constraintVertical_bias="1.0">
+        app2:layout_constraintVertical_bias="0.0">
 
-        <LinearLayout
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="55dp"
+            android:layout_height="47dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/settings"
+            android:visibility="visible"
+            app2:layout_constraintBottom_toBottomOf="parent"
+            app2:layout_constraintHorizontal_bias="0.972"
+            app2:layout_constraintLeft_toLeftOf="parent"
+            app2:layout_constraintRight_toRightOf="parent"
+            app2:layout_constraintTop_toTopOf="parent"
+            app2:layout_constraintVertical_bias="0.258" />
 
-        </LinearLayout>
-    </ScrollView>
+        <ImageView
+            android:id="@+id/imgProfPic"
+            android:layout_width="55dp"
+            android:layout_height="47dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/man"
+            android:visibility="visible"
+            app2:layout_constraintBottom_toBottomOf="parent"
+            app2:layout_constraintLeft_toLeftOf="parent"
+            app2:layout_constraintTop_toTopOf="parent"
+            app2:layout_constraintVertical_bias="0.258" />
 
-    <EditText
-        android:id="@+id/txtName"
-        android:layout_width="80dp"
-        android:layout_height="42dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        tools:layout_editor_absoluteY="9dp"
-        app2:layout_constraintLeft_toRightOf="@+id/imgProfPic"
-        android:layout_marginLeft="8dp" />
+        <TextView
+            android:id="@+id/txtName"
+            android:layout_width="152dp"
+            android:layout_height="37dp"
+            android:layout_marginEnd="14dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name"
+            app2:layout_constraintRight_toLeftOf="@+id/imageView2"
+            android:layout_marginRight="16dp"
+            app2:layout_constraintLeft_toRightOf="@+id/imgProfPic"
+            android:layout_marginLeft="8dp"
+            app2:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            app2:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp"
+            app2:layout_constraintHorizontal_bias="0.32"
+            app2:layout_constraintVertical_bias="0.195" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="344dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        app2:layout_constraintBottom_toBottomOf="parent"
+        app2:layout_constraintLeft_toLeftOf="parent"
+        app2:layout_constraintRight_toRightOf="parent"
+        app2:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+        app2:layout_constraintVertical_bias="0.0">
+
+        <Button
+            android:id="@+id/btnLoadMore"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="2dp"
+            android:text="Load More"
+            app2:layout_constraintHorizontal_bias="0.0"
+            app2:layout_constraintLeft_toLeftOf="parent"
+            app2:layout_constraintRight_toRightOf="parent"
+            app2:layout_constraintTop_toTopOf="parent" />
+
+        <ScrollView
+            android:id="@+id/scrollView2"
+            android:layout_width="0dp"
+            android:layout_height="399dp"
+            android:layout_marginTop="8dp"
+            app2:layout_constraintBottom_toBottomOf="parent"
+            app2:layout_constraintHorizontal_bias="1.0"
+            app2:layout_constraintLeft_toLeftOf="parent"
+            app2:layout_constraintRight_toRightOf="parent"
+            app2:layout_constraintTop_toBottomOf="@+id/btnLoadMore"
+            app2:layout_constraintVertical_bias="0.0">
+
+            <LinearLayout
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+        </ScrollView>
+
+    </android.support.constraint.ConstraintLayout>
+
 </android.support.constraint.ConstraintLayout>

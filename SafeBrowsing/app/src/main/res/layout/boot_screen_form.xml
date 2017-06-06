@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="cy.ac.ucy.cs.safeBrowsing.MainActivity">
 
-    <EditText
+    <TextView
         android:id="@+id/lblBootScreen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
         app:layout_constraintVertical_bias="0.0"
         tools:textSize="24sp" />
 
-    <EditText
+    <TextView
         android:id="@+id/editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

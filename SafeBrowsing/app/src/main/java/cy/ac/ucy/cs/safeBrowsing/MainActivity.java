@@ -124,13 +124,29 @@ public class MainActivity extends Activity {
     }
 
     public boolean isLoggedIn() {
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        final AccessToken[] accessToken = new AccessToken[1];
+        final MyProfile[] profile = new MyProfile[1];
+        Thread t= new Thread(){
+            @Override
+            public void run() {
+                accessToken[0] = AccessToken.getCurrentAccessToken();
+                MyFbLib.setAt(accessToken[0]);
+                profile[0]= MyFbLib.getMyProfile();
+            }
+        };
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+      //  AccessToken accessToken = AccessToken.getCurrentAccessToken();
         /*try {
             TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
         }*/
-        MyFbLib.setAt(accessToken);
-        return accessToken != null;
+
+        return profile[0] != null;
     }
 
     public void enterWall () {

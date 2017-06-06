@@ -290,6 +290,8 @@ public class MyFbLib  {
 
     public static MyProfile getMyProfile () {
         final MyProfile[] userProfileOrg = new MyProfile[1];
+        final boolean[] flag = new boolean[1];
+        flag[0]= false;
         Thread t= new Thread() {
             @Override
             public void run() {
@@ -309,15 +311,21 @@ public class MyFbLib  {
 
                                 try{
                                     JSONObject profile= response.getJSONObject();
+                                    if(response.getError()!=null){
+                                        flag[0]= true;
+                                    }
                                     if(profile.has("birthday")){
                                         birthday=profile.getString("birthday");
                                     }
                                     if(profile.has("email")){
                                         email=profile.getString("email");
                                     }
-                                    JSONObject picture=profile.getJSONObject("pictre");
-                                    JSONObject picData=picture.getJSONObject("data");
-                                    profilePicLink=picData.getString("url");
+                                    if(profile.has("pictre")){
+                                        JSONObject picture=profile.getJSONObject("pictre");
+                                        JSONObject picData=picture.getJSONObject("data");
+                                        profilePicLink=picData.getString("url");
+                                    }
+
                                     if(profile.has("about")){
                                         about=profile.getString("about");
                                     }
@@ -328,15 +336,25 @@ public class MyFbLib  {
                                         JSONObject town=profile.getJSONObject("hometown");
                                         homeTown=town.getString("name");
                                     }
-                                    timelineLink=profile.getString("link");
-                                    id=profile.getString("id");
+                                    if(profile.has("link")){
+                                        timelineLink=profile.getString("link");
+                                    }
+                                    if(profile.has("id")){
+                                        id=profile.getString("id");
+                                    }
+
 
 
                                 }catch (Exception e){
                                     e.printStackTrace();
                                 }
-                                MyProfile userProfile=new MyProfile(id,profilePicLink,about,birthday,email,gender,homeTown,timelineLink);
-                                Log.d(TAG,userProfile.toString());
+                                MyProfile userProfile;
+                                if (flag[0]==true) {
+                                    userProfile= null;
+                                } else {
+                                    userProfile=new MyProfile(id,profilePicLink,about,birthday,email,gender,homeTown,timelineLink);
+                                    Log.d(TAG,userProfile.toString());
+                                }
                                 userProfileOrg[0] =userProfile;
                             }
                         });
@@ -355,6 +373,7 @@ public class MyFbLib  {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         return userProfileOrg[0];
     }
 
