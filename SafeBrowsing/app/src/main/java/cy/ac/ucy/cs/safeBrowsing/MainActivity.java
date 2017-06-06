@@ -161,6 +161,12 @@ public class MainActivity extends Activity {
         list.addView(button2, params2);
         list.addView(txt2, params2);
         txt2.setText("ALALALAAL\n\n ALALAA");
+
+
+    }
+
+    public void addNewPostToView (MyPost post) {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
     }
 
 }
