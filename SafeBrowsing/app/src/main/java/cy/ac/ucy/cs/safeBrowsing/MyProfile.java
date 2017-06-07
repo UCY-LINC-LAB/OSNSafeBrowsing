@@ -4,8 +4,25 @@ package cy.ac.ucy.cs.safeBrowsing;
 public class MyProfile {
 
     private String id = null;
+    private String name = null;
     private String profilePicLink = null;
     private String about = null;
+
+    @Override
+    public String toString() {
+        return "MyProfile{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", profilePicLink='" + profilePicLink + '\'' +
+                ", about='" + about + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", email='" + email + '\'' +
+                ", gender='" + gender + '\'' +
+                ", homeTown='" + homeTown + '\'' +
+                ", timelineLink='" + timelineLink + '\'' +
+                '}';
+    }
+
     private String birthday = null;
     private String email = null;
     private String gender = null;
@@ -47,14 +64,6 @@ public class MyProfile {
         this.about = about;
     }
 
-    public String getBirthdate() {
-        return birthday;
-    }
-
-    public void setBirthdate(String birthdate) {
-        this.birthday = birthdate;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -87,17 +96,20 @@ public class MyProfile {
         this.timelineLink = timelineLink;
     }
 
-    @Override
-    public String toString() {
-        return "MyProfile{" +
-                "id='" + id + '\'' +
-                ", profilePicLink='" + profilePicLink + '\'' +
-                ", about='" + about + '\'' +
-                ", birthday='" + birthday + '\'' +
-                ", email='" + email + '\'' +
-                ", gender='" + gender + '\'' +
-                ", homeTown='" + homeTown + '\'' +
-                ", timelineLink='" + timelineLink + '\'' +
-                '}';
+    public String getName() {
+        return name;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
 }

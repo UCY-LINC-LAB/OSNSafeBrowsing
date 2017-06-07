@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -154,6 +156,11 @@ public class MainActivity extends Activity {
 
         ArrayList<MyPost> posts=MyFbLib.getTenNextPosts();
         list = (LinearLayout) findViewById(R.id.list);
+
+        TextView txtName= (TextView) findViewById(R.id.txtName);
+        //txtName.setText(MyFbLib.getMyProfile());
+
+        /*
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         Button button2 = new Button(MainActivity.this);
         TextView txt2 = new TextView(MainActivity.this);
@@ -161,12 +168,35 @@ public class MainActivity extends Activity {
         list.addView(button2, params2);
         list.addView(txt2, params2);
         txt2.setText("ALALALAAL\n\n ALALAA");
+        */
+        for (int i= 0; i<posts.size(); i++) {
+            addNewPostToView(posts.get(i));
+        }
 
 
     }
 
     public void addNewPostToView (MyPost post) {
+        list = (LinearLayout) findViewById(R.id.list);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
+        TextView txtAuthor = new TextView(MainActivity.this);
+        txtAuthor.setText(post.getAuthorName());
+        list.addView(txtAuthor, params);
+
+        ImageView imgAuthor= new ImageView(MainActivity.this);
+        Picasso.with(MainActivity.this).load(post.getAuthorImg()).into(imgAuthor);
+        list.addView(imgAuthor, params);
+
+        TextView txtMessage = new TextView(MainActivity.this);
+        txtMessage.setText(post.getMessage());
+        list.addView(txtMessage, params);
+
+        if (post instanceof MyPhotoPost) {
+            ImageView imgPhotoPost= new ImageView(MainActivity.this);
+            Picasso.with(MainActivity.this).load(((MyPhotoPost) post).getPictureLink()).into(imgPhotoPost);
+            list.addView(imgPhotoPost, params);
+        }
+
     }
 
 }
