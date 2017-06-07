@@ -47,6 +47,9 @@ public class MyFbLib  {
                             public void onCompleted(GraphResponse response) {
                                 try {
                                     Log.d(TAG,"1st request");
+                                    if(response.getError()!=null){
+                                        return;
+                                    }
                                     JSONObject json=response.getJSONObject();
                                     JSONArray jarray=json.getJSONArray("data");
                                     // JSONObject paging=response.getJSONObject();
@@ -61,11 +64,19 @@ public class MyFbLib  {
                                                     public void onCompleted(GraphResponse response) {
                                                         String postID=null;
                                                         Log.d(TAG,"2nd request");
+                                                        if(response.getError()!=null){
+                                                            return;
+                                                        }
                                                         try {
                                                             JSONObject json=response.getJSONObject();
-                                                            JSONArray jarray=json.getJSONArray("data");
+                                                            JSONArray jarray=null;
+                                                            if(json.has("data")) {
+                                                                jarray = json.getJSONArray("data");
+                                                            }
                                                             JSONObject pagePost=jarray.getJSONObject(0);
-                                                            postID=pagePost.getString("id");
+                                                            if(pagePost.has("id")) {
+                                                                postID = pagePost.getString("id");
+                                                            }
 
                                                         }catch (Exception e){
                                                             e.printStackTrace();
@@ -76,6 +87,9 @@ public class MyFbLib  {
                                                                 new GraphRequest.Callback() {
                                                                     @Override
                                                                     public void onCompleted(GraphResponse response) {
+                                                                        if(response.getError()!=null){
+                                                                            return;
+                                                                        }
                                                                         JSONObject json=response.getJSONObject();
                                                                         String postType=null;
                                                                         Log.d(TAG,"3rd request");
@@ -93,15 +107,23 @@ public class MyFbLib  {
 
                                                                             //Lipoun ta likes,comments,shares
                                                                             try {
-
-                                                                                postID=json.getString("id");
-                                                                                message= json.getString("message");
-                                                                                pageName=page.getString("name");
-                                                                                created_time=json.getString("created_time");
-                                                                                JSONObject pic=page.getJSONObject("picture");
-                                                                                JSONObject data=pic.getJSONObject("data");
-                                                                                pagePicture=data.getString("url");
-
+                                                                                if(json.has("id")){
+                                                                                    postID=json.getString("id");
+                                                                                }
+                                                                                if(json.has("message")){
+                                                                                    message= json.getString("message");
+                                                                                }
+                                                                                if(page.has("name")){
+                                                                                    pageName=page.getString("name");
+                                                                                }
+                                                                                if(json.has("created_time")){
+                                                                                    created_time=json.getString("created_time");
+                                                                                }
+                                                                                if(page.has("picture")) {
+                                                                                    JSONObject pic = page.getJSONObject("picture");
+                                                                                    JSONObject data = pic.getJSONObject("data");
+                                                                                    pagePicture = data.getString("url");
+                                                                                }
 
                                                                             }catch (Exception e){
                                                                                 e.printStackTrace();
@@ -130,14 +152,26 @@ public class MyFbLib  {
                                                                                 if(json.has("message")) {
                                                                                     message = json.getString("message");
                                                                                 }
-                                                                                postID=json.getString("id");
-                                                                                pageName=page.getString("name");
-                                                                                JSONObject pic=page.getJSONObject("picture");
-                                                                                JSONObject data=pic.getJSONObject("data");
-                                                                                pagePicture=data.getString("url");
-                                                                                created_time=json.getString("created_time");
-                                                                                urlLink=json.getString("link");
-                                                                                urlImg=json.getString("full_picture");
+                                                                                if(json.has("id")){
+                                                                                    postID=json.getString("id");
+                                                                                }
+                                                                                if(page.has("name")){
+                                                                                    pageName=page.getString("name");
+                                                                                }
+                                                                                if(page.has("picture")) {
+                                                                                    JSONObject pic=page.getJSONObject("picture");
+                                                                                    JSONObject data=pic.getJSONObject("data");
+                                                                                    pagePicture=data.getString("url");
+                                                                                }
+                                                                                if(json.has("created_time")) {
+                                                                                    created_time=json.getString("created_time");
+                                                                                }
+                                                                                if(json.has("link")){
+                                                                                    urlLink=json.getString("link");
+                                                                                }
+                                                                                if(json.has("full_picture")){
+                                                                                    urlImg=json.getString("full_picture");
+                                                                                }
                                                                             }catch (Exception e){
                                                                                 e.printStackTrace();
                                                                             }
@@ -164,14 +198,27 @@ public class MyFbLib  {
                                                                                 if(json.has("message")) {
                                                                                     message = json.getString("message");
                                                                                 }
-                                                                                postID=json.getString("id");
-                                                                                pageName=page.getString("name");
-                                                                                JSONObject pic=page.getJSONObject("picture");
-                                                                                JSONObject data=pic.getJSONObject("data");
-                                                                                pagePicture=data.getString("url");
-                                                                                created_time=json.getString("created_time");
-                                                                                urlLink=json.getString("link");
-                                                                                urlImg=json.getString("full_picture");
+                                                                                if(json.has("id")){
+                                                                                    postID=json.getString("id");
+                                                                                }
+                                                                                if(page.has("name")){
+                                                                                    pageName=page.getString("name");
+                                                                                }
+                                                                                if(page.has("picture")) {
+                                                                                    JSONObject pic=page.getJSONObject("picture");
+                                                                                    JSONObject data=pic.getJSONObject("data");
+                                                                                    pagePicture=data.getString("url");
+                                                                                }
+                                                                                if(json.has("created_time")) {
+                                                                                    created_time=json.getString("created_time");
+                                                                                }
+                                                                                if(json.has("link")){
+                                                                                    urlLink=json.getString("link");
+                                                                                }
+                                                                                if(json.has("full_picture")){
+                                                                                    urlImg=json.getString("full_picture");
+                                                                                }
+
                                                                             }catch (Exception e){
                                                                                 e.printStackTrace();
                                                                             }
@@ -196,13 +243,23 @@ public class MyFbLib  {
                                                                                 if(json.has("message")) {
                                                                                     message = json.getString("message");
                                                                                 }
-                                                                                postID=json.getString("id");
-                                                                                pageName=page.getString("name");
-                                                                                JSONObject pic=page.getJSONObject("picture");
-                                                                                JSONObject data=pic.getJSONObject("data");
-                                                                                pagePicture=data.getString("url");
-                                                                                created_time=json.getString("created_time");
-                                                                                pictureLink=json.getString("full_picture");
+                                                                                if(json.has("id")){
+                                                                                    postID=json.getString("id");
+                                                                                }
+                                                                                if(page.has("name")){
+                                                                                    pageName=page.getString("name");
+                                                                                }
+                                                                                if(page.has("picture")) {
+                                                                                    JSONObject pic=page.getJSONObject("picture");
+                                                                                    JSONObject data=pic.getJSONObject("data");
+                                                                                    pagePicture=data.getString("url");
+                                                                                }
+                                                                                if(json.has("created_time")) {
+                                                                                    created_time=json.getString("created_time");
+                                                                                }
+                                                                                if(json.has("full_picture")) {
+                                                                                    pictureLink=json.getString("full_picture");
+                                                                                }
                                                                             }catch (Exception e){
                                                                                 e.printStackTrace();
                                                                             }
@@ -301,6 +358,7 @@ public class MyFbLib  {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
                                 String id = null;
+                                String name=null;
                                 String profilePicLink = null;
                                 String about = null;
                                 String birthday = null;
@@ -316,6 +374,9 @@ public class MyFbLib  {
                                     }
                                     if(profile.has("birthday")){
                                         birthday=profile.getString("birthday");
+                                    }
+                                    if(profile.has("name")){
+                                        name=profile.getString("name");
                                     }
                                     if(profile.has("email")){
                                         email=profile.getString("email");
@@ -352,7 +413,7 @@ public class MyFbLib  {
                                 if (flag[0]==true) {
                                     userProfile= null;
                                 } else {
-                                    userProfile=new MyProfile(id,profilePicLink,about,birthday,email,gender,homeTown,timelineLink);
+                                    userProfile=new MyProfile(id,name,profilePicLink,about,birthday,email,gender,homeTown,timelineLink);
                                     Log.d(TAG,userProfile.toString());
                                 }
                                 userProfileOrg[0] =userProfile;
@@ -360,7 +421,7 @@ public class MyFbLib  {
                         });
 
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "birthday,email,picture,about,gender,hometown,link");
+                parameters.putString("fields", "birthday,email,picture,about,gender,hometown,link,name");
                 request.setParameters(parameters);
                 request.executeAndWait();
 

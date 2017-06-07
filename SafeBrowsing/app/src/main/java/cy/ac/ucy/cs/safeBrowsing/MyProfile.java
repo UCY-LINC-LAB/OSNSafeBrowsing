@@ -7,30 +7,15 @@ public class MyProfile {
     private String name = null;
     private String profilePicLink = null;
     private String about = null;
-
-    @Override
-    public String toString() {
-        return "MyProfile{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", profilePicLink='" + profilePicLink + '\'' +
-                ", about='" + about + '\'' +
-                ", birthday='" + birthday + '\'' +
-                ", email='" + email + '\'' +
-                ", gender='" + gender + '\'' +
-                ", homeTown='" + homeTown + '\'' +
-                ", timelineLink='" + timelineLink + '\'' +
-                '}';
-    }
-
     private String birthday = null;
     private String email = null;
     private String gender = null;
     private String homeTown = null;
     private String timelineLink = null;
 
-    public MyProfile(String id, String profilePicLink, String about, String birthday, String email, String gender, String homeTown, String timelineLink) {
+    public MyProfile(String id, String name,String profilePicLink, String about, String birthday, String email, String gender, String homeTown, String timelineLink) {
         this.id = id;
+        this.name=name;
         this.profilePicLink = profilePicLink;
         this.about = about;
         this.birthday = birthday;
@@ -110,6 +95,22 @@ public class MyProfile {
 
     public void setBirthday(String birthday) {
         this.birthday = birthday;
+    }
+
+
+    @Override
+    public String toString() {
+        return "MyProfile{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", profilePicLink='" + profilePicLink + '\'' +
+                ", about='" + about + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", email='" + email + '\'' +
+                ", gender='" + gender + '\'' +
+                ", homeTown='" + homeTown + '\'' +
+                ", timelineLink='" + timelineLink + '\'' +
+                '}';
     }
 
 }
