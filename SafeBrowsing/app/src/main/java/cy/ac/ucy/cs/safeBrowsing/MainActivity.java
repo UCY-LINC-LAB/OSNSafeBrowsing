@@ -2,10 +2,15 @@ package cy.ac.ucy.cs.safeBrowsing;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import android.support.constraint.ConstraintLayout;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -154,24 +159,62 @@ public class MainActivity extends Activity {
     public void enterWall () {
         setContentView(R.layout.wall_form);
 
+        ImageView imgSettings =  (ImageView) findViewById(R.id.imgSettings);
+        imgSettings.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                setContentView(R.layout.settings_form);
+            }
+        });
+
+        Button btnLoadMore=(Button) findViewById(R.id.btnLoadMore);
+        btnLoadMore.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                ArrayList<MyPost> posts=MyFbLib.getTenNextPosts();
+                list = (LinearLayout) findViewById(R.id.list);
+
+                for (int i= 0; i<posts.size(); i++) {
+                    addNewPostToView(posts.get(i));
+                }
+            }
+        });
+
+        /*
+        btnvideo.setOnClickListener(new OnClickListener() {
+
+            public void onClick(View v) {
+
+                startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse("http://www.youtube.com/watch?v=Hxy8BZGQ5Jo")));
+                Log.i("Video", "Video Playing....");
+
+            }
+        });*/
+
+        ImageView imgProfPic= (ImageView) findViewById(R.id.imgProfPic);
+        if (MyFbLib.getMyProfile().getProfilePicLink()!= null) {
+            Picasso.with(MainActivity.this).load(MyFbLib.getMyProfile().getProfilePicLink()).into(imgProfPic);
+        }
+
+        TextView txtName= (TextView) findViewById(R.id.txtName);
+        txtName.setText(MyFbLib.getMyProfile().getName());
+
         ArrayList<MyPost> posts=MyFbLib.getTenNextPosts();
         list = (LinearLayout) findViewById(R.id.list);
 
-        TextView txtName= (TextView) findViewById(R.id.txtName);
-        //txtName.setText(MyFbLib.getMyProfile());
+        for (int i= 0; i<posts.size(); i++) {
+            addNewPostToView(posts.get(i));
+        }
 
-        /*
+                /*
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         Button button2 = new Button(MainActivity.this);
         TextView txt2 = new TextView(MainActivity.this);
         LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
         list.addView(button2, params2);
         list.addView(txt2, params2);
-        txt2.setText("ALALALAAL\n\n ALALAA");
+        txt2.setText("Hello World");
         */
-        for (int i= 0; i<posts.size(); i++) {
-            addNewPostToView(posts.get(i));
-        }
 
 
     }
@@ -179,23 +222,44 @@ public class MainActivity extends Activity {
     public void addNewPostToView (MyPost post) {
         list = (LinearLayout) findViewById(R.id.list);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
-        TextView txtAuthor = new TextView(MainActivity.this);
-        txtAuthor.setText(post.getAuthorName());
-        list.addView(txtAuthor, params);
+        LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params2_1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params3 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        ConstraintLayout.LayoutParams params4= new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
+        ConstraintLayout.LayoutParams params5= new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.HORIZONTAL, ConstraintLayout.LayoutParams.MATCH_CONSTRAINT_WRAP);
+
+        GridLayout gridAuthor= new GridLayout(MainActivity.this);
+        list.addView(gridAuthor, params3);
 
         ImageView imgAuthor= new ImageView(MainActivity.this);
         Picasso.with(MainActivity.this).load(post.getAuthorImg()).into(imgAuthor);
-        list.addView(imgAuthor, params);
+        params2_1.width= 100;
+        params2_1.height= 100;
+        gridAuthor.addView(imgAuthor, params2_1);
+
+        /*ViewGroup.LayoutParams paramsInstance = imgAuthor.getLayoutParams();
+        params2.width= 550;
+        params2.height= 500;
+        imgAuthor.setLayoutParams(paramsInstance);*/
+
+        TextView txtAuthor = new TextView(MainActivity.this);
+        txtAuthor.setText("   " + post.getAuthorName());
+        gridAuthor.addView(txtAuthor, params2);
+        //txtAuthor.setLayoutParams(new LinearLayout.LayoutParams(230, 40));
 
         TextView txtMessage = new TextView(MainActivity.this);
         txtMessage.setText(post.getMessage());
-        list.addView(txtMessage, params);
+        list.addView(txtMessage, params2);
 
         if (post instanceof MyPhotoPost) {
             ImageView imgPhotoPost= new ImageView(MainActivity.this);
             Picasso.with(MainActivity.this).load(((MyPhotoPost) post).getPictureLink()).into(imgPhotoPost);
-            list.addView(imgPhotoPost, params);
+            list.addView(imgPhotoPost, params2);
         }
+
+        TextView txtPadding = new TextView(MainActivity.this);
+        txtPadding.setText("\n\n");
+        list.addView(txtPadding, params2);
 
     }
 
