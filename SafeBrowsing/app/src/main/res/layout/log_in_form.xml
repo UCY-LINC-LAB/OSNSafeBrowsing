@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/editText2"
+        android:id="@+id/lblAppName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -14,16 +14,18 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
+        android:includeFontPadding="false"
         android:inputType="textPersonName"
-        android:text="Log In Form"
+        android:text="Safe Browsing"
         android:textAlignment="center"
+        android:textColor="@android:color/black"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintHorizontal_bias="0.538"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.15"
+        app:layout_constraintVertical_bias="0.045"
         tools:textSize="30sp" />
 
     <com.facebook.login.widget.LoginButton
@@ -38,7 +40,25 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintVertical_bias="0.266"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintVertical_bias="0.743"
+        app:layout_constraintTop_toBottomOf="@+id/lblAppName"
+        app:layout_constraintHorizontal_bias="0.503" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="145dp"
+        android:layout_height="162dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="56dp"
+        android:src= "@drawable/logo"
+        app:layout_constraintBottom_toTopOf="@+id/login_button"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblAppName"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/logo" />
 
 </android.support.constraint.ConstraintLayout>

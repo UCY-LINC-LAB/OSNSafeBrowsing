@@ -2,6 +2,7 @@ package cy.ac.ucy.cs.safeBrowsing;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -40,6 +41,9 @@ public class MainActivity extends Activity {
 
     int backButtonCount= 0;
 
+    static boolean isWallOpened= false;
+    static ArrayList<MyPost> allPosts= new ArrayList();
+
     // ---------------
     LinearLayout list;
     // ---------------
@@ -52,32 +56,7 @@ public class MainActivity extends Activity {
         callbackManager = CallbackManager.Factory.create();
         //setContentView(R.layout.boot_screen_form);
 
-        setContentView(R.layout.log_in_form);
-        login = (LoginButton) findViewById(R.id.login_button);
-        //login.setReadPermissions("user_friends", "email");
-
-        // Callback registration
-        login.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                // App code
-                LR= loginResult;
-                AT= LR.getAccessToken();
-                MyFbLib.setAt(AT);
-
-                enterWall ();
-        }
-
-            @Override
-            public void onCancel() {
-                //info.setText("Login attempt canceled.");
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                //info.setText("Login attempt failed.");
-            }
-        });
+        openLoginForm();
 
         // Catch Log out Event
         AccessTokenTracker accessTokenTracker = new AccessTokenTracker() {
@@ -88,18 +67,19 @@ public class MainActivity extends Activity {
 
                 if (currentAccessToken == null){
                     AT= null;
-                    setContentView(R.layout.log_in_form);
+                    isWallOpened= false;
+                    allPosts= new ArrayList();
+                    openLoginForm();
                 }
             }
         };
 
-
         setContentView(R.layout.boot_screen_form);
 
         if (isLoggedIn()== true) {
-            enterWall ();
+            openWallForm();
         } else {
-            setContentView(R.layout.log_in_form);
+            openLoginForm();
         }
     }
 
@@ -156,14 +136,14 @@ public class MainActivity extends Activity {
         return profile[0] != null;
     }
 
-    public void enterWall () {
+    public void openWallForm () {
         setContentView(R.layout.wall_form);
 
         ImageView imgSettings =  (ImageView) findViewById(R.id.imgSettings);
         imgSettings.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                setContentView(R.layout.settings_form);
+                openSettingsForm ();
             }
         });
 
@@ -172,6 +152,7 @@ public class MainActivity extends Activity {
 
             public void onClick(View v) {
                 ArrayList<MyPost> posts=MyFbLib.getTenNextPosts();
+                allPosts.addAll(posts);
                 list = (LinearLayout) findViewById(R.id.list);
 
                 for (int i= 0; i<posts.size(); i++) {
@@ -195,16 +176,33 @@ public class MainActivity extends Activity {
         if (MyFbLib.getMyProfile().getProfilePicLink()!= null) {
             Picasso.with(MainActivity.this).load(MyFbLib.getMyProfile().getProfilePicLink()).into(imgProfPic);
         }
+        imgProfPic.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                openProfileForm ();
+            }
+        });
 
         TextView txtName= (TextView) findViewById(R.id.txtName);
         txtName.setText(MyFbLib.getMyProfile().getName());
 
-        ArrayList<MyPost> posts=MyFbLib.getTenNextPosts();
-        list = (LinearLayout) findViewById(R.id.list);
+        if (isWallOpened== false) {
+            isWallOpened= true;
+            ArrayList<MyPost> posts=MyFbLib.getTenNextPosts();
+            allPosts.addAll(posts);
+            list = (LinearLayout) findViewById(R.id.list);
 
-        for (int i= 0; i<posts.size(); i++) {
-            addNewPostToView(posts.get(i));
+            for (int i= 0; i<posts.size(); i++) {
+                addNewPostToView(posts.get(i));
+            }
+        } else {
+            list = (LinearLayout) findViewById(R.id.list);
+
+            for (int i= 0; i<allPosts.size(); i++) {
+                addNewPostToView(allPosts.get(i));
+            }
         }
+
 
                 /*
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -261,6 +259,56 @@ public class MainActivity extends Activity {
         txtPadding.setText("\n\n");
         list.addView(txtPadding, params2);
 
+    }
+
+    public void openLoginForm () {
+        setContentView(R.layout.log_in_form);
+        login = (LoginButton) findViewById(R.id.login_button);
+        //login.setReadPermissions("user_friends", "email");
+
+        // Callback registration
+        login.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                // App code
+                LR= loginResult;
+                AT= LR.getAccessToken();
+                MyFbLib.setAt(AT);
+
+                openWallForm();
+            }
+
+            @Override
+            public void onCancel() {
+                //info.setText("Login attempt canceled.");
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                //info.setText("Login attempt failed.");
+            }
+        });
+    }
+
+
+    public void openProfileForm () {
+        setContentView(R.layout.profile_form);
+        Button btnBackToWall2= (Button) findViewById(R.id.btnBackToWall2);
+        btnBackToWall2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                openWallForm();
+            }
+        });
+    }
+
+    public void openSettingsForm () {
+        setContentView(R.layout.settings_form);
+        Button btnBackToWall= (Button) findViewById(R.id.btnBackToWall);
+        btnBackToWall.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                openWallForm();
+            }
+        });
     }
 
 }
