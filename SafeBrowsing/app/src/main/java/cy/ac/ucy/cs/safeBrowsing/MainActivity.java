@@ -2,7 +2,11 @@ package cy.ac.ucy.cs.safeBrowsing;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +34,9 @@ import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.squareup.picasso.Picasso;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -233,6 +240,7 @@ public class MainActivity extends Activity {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
         LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LinearLayout.LayoutParams params2_1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params2_2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         LinearLayout.LayoutParams params3 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         ConstraintLayout.LayoutParams params4 = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
         ConstraintLayout.LayoutParams params5 = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.HORIZONTAL, ConstraintLayout.LayoutParams.MATCH_CONSTRAINT_WRAP);
@@ -268,6 +276,24 @@ public class MainActivity extends Activity {
             ImageView imgPhotoPost = new ImageView(MainActivity.this);
             Picasso.with(MainActivity.this).load(((MyPhotoPost) post).getPictureLink()).into(imgPhotoPost);
             list.addView(imgPhotoPost, params2);
+        }
+
+        if (post instanceof MyVideoPost) {
+           /* Bitmap picVideo= getBitmapFromURL(((MyVideoPost) post).getVideoImg());
+            Bitmap playButton = BitmapFactory.decodeResource(MainActivity.this.getResources(),
+                    R.drawable.playbutton);
+            Bitmap finalVideoPic= overlay(picVideo, playButton);*/
+
+            ImageView imgVideoPost = new ImageView(MainActivity.this);
+           // imgVideoPost.setImageBitmap(finalVideoPic);
+            Picasso.with(MainActivity.this).load(((MyVideoPost) post).getVideoImg()).into(imgVideoPost);
+            list.addView(imgVideoPost, params2);
+            final MyVideoPost vP= (MyVideoPost)post;
+            imgVideoPost.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(vP.getVideoLink())));
+                }
+            });
         }
 
         TextView txtPadding = new TextView(MainActivity.this);
@@ -338,6 +364,29 @@ public class MainActivity extends Activity {
         lblSettingsTitle.setText(Html.fromHtml("<u>Settings</u>"));
         lblSettingsTitle.setTextColor(Color.BLACK);
         lblSettingsTitle.setTextSize(30);
+    }
+
+    public static Bitmap overlay(Bitmap bmp1, Bitmap bmp2) {
+        Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), bmp1.getConfig());
+        Canvas canvas = new Canvas(bmOverlay);
+        canvas.drawBitmap(bmp1, new Matrix(), null);
+        canvas.drawBitmap(bmp2, 0, 0, null);
+        return bmOverlay;
+    }
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (Exception e) {
+            // Log exception
+            return null;
+        }
     }
 
 }
