@@ -38,7 +38,6 @@ public class MyFbLib  {
     public  static void fillPostQueue(){
         int i=0;
         final String userId =at.getUserId();
-        final String[] after = new String[1];
         Thread t= new Thread(){
             @Override
             public void run() {
@@ -53,13 +52,6 @@ public class MyFbLib  {
                                     }
                                     JSONObject json=response.getJSONObject();
                                     JSONArray jarray=json.getJSONArray("data");
-                                    if(json.has("paging")){
-                                        JSONObject paging=json.getJSONObject("paging");
-                                        JSONObject cursors=paging.getJSONObject("cursors");
-                                        after[0] =cursors.getString("after");
-                                    }
-
-
                                     // JSONObject paging=response.getJSONObject();
 
                                     for(int i=0; i<jarray.length() || counter<10; i++){
@@ -304,8 +296,6 @@ public class MyFbLib  {
                         });
                 Bundle parameters = new Bundle();
                 parameters.putString("fields", "picture,name");
-                parameters.putString("limit", "25");
-                parameters.putString("after", after[0]);
                 requestPages.setParameters(parameters);
                 requestPages.executeAndWait();
             }
@@ -341,12 +331,12 @@ public class MyFbLib  {
         counter=0;
 
         fillPostQueue();
-       // MyProfile userProfile=getMyProfile();
+        MyProfile userProfile=getMyProfile();
         for (int i = 0; i < queuePost.size(); i++) {
             MyPost tmp = new MyPost(queuePost.get(i));
-            if (!checkDuplicates(tmp)) {
-                givenPosts.add(tmp);
-                posts.add(tmp);
+            if (!checkDuplicates(queuePost.get(i))) {
+                givenPosts.add(queuePost.get(i));
+                posts.add(queuePost.get(i));
             }
         }
 
