@@ -296,6 +296,19 @@ public class MainActivity extends Activity {
             });
         }
 
+        if (post instanceof MyLinkPost) {
+            ImageView imgLinkPost = new ImageView(MainActivity.this);
+            // imgVideoPost.setImageBitmap(finalVideoPic);
+            Picasso.with(MainActivity.this).load(((MyLinkPost) post).getURLImg()).into(imgLinkPost);
+            list.addView(imgLinkPost, params2);
+            final MyLinkPost lP= (MyLinkPost)post;
+            imgLinkPost.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(lP.getURLLink())));
+                }
+            });
+        }
+
         TextView txtPadding = new TextView(MainActivity.this);
         txtPadding.setText("\n\n");
         list.addView(txtPadding, params2);
