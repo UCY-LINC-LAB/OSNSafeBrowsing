@@ -8,9 +8,9 @@ TBD
 Contributors
 ------------
 - [Marios Kelepeshis](https://github.com/username)
-- [Chrysovalantis Christodoulou] (https://github.com/Chrysovalantis)
-- [Demetris Paschalides] (https://github.com/dpasch01)
-- [Demetris Trihinas] (https://github.com/dtrihinas)
+- [Chrysovalantis Christodoulou](https://github.com/Chrysovalantis)
+- [Demetris Paschalides](https://github.com/dpasch01)
+- [Demetris Trihinas](https://github.com/dtrihinas)
 
 License
 ------------
