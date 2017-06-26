@@ -7,7 +7,7 @@ TBD
 
 Contributors
 ------------
-- [Marios Kelepeshis](https://github.com/username)
+- [Marios Kelepeshis](https://github.com/mkelepe)
 - [Chrysovalantis Christodoulou](https://github.com/Chrysovalantis)
 - [Demetris Paschalides](https://github.com/dpasch01)
 - [Demetris Trihinas](https://github.com/dtrihinas)
